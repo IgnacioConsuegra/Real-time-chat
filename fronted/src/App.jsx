@@ -1,26 +1,22 @@
-import { useState } from 'react'
-
-function App() {
-  const [count, setCount] = useState(0)
-
+/* eslint-disable react/no-unknown-property */
+/* eslint-disable no-unused-vars */
+import React from "react";
+import { Navbar } from "./components/Navbar";
+import { Routes, Route } from "react-router-dom";
+import { HomePage } from "./pages/HomePage";
+const App = () => {
   return (
-    <>
-      <div>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div>
+      <Navbar></Navbar>
+      <Routes>
+        <Route path="/" element={<HomePage/>}/>
+        <Route path="/signup" element={<HomePage/>}/>
+        <Route path="/login" element={<HomePage/>}/>
+        <Route path="/settings" element={<HomePage/>}/>
+        <Route path="/profile" element={<HomePage/>}/>
+      </Routes>
+    </div>
+  );
+};
 
-export default App
+export default App;
