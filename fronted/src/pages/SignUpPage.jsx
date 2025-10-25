@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, User } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Lock,
+  Mail,
+  MessageSquare,
+  User,
+} from "lucide-react";
 import { Link } from "react-router-dom";
+import { AuthImagePattern } from "../components/AuthImagePattern";
+import toast from "react-hot-toast";
 
 export const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -11,9 +21,21 @@ export const SignUpPage = () => {
     password: "",
   });
   const { signUp, isSigningUp } = useAuthStore();
-  const validateForm = () => {};
+  const validateForm = () => {
+    if (!formData.fullName.trim()) return toast.error("Full name is required");
+    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!/\S+@\S+\.\S+/.test(formData.email))
+      return toast.error("Invalid email format");
+    if (!formData.password) return toast.error("Password is required");
+    if (formData.password.length < 6)
+      return toast.error("Password must be at least 6 characters");
+
+    return true;
+  };
   const handleSubmit = ev => {
     ev.preventDefault();
+    const success = validateForm();
+    if(success === true) signUp(formData);
   };
   return (
     <div className="min-h-screen grid lg:grid-cols-2">
@@ -43,7 +65,7 @@ export const SignUpPage = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="size-5 text-base-content/40 z-40"/>
+                  <User className="size-5 text-base-content/40 z-40" />
                 </div>
                 <input
                   type="text"
@@ -83,7 +105,7 @@ export const SignUpPage = () => {
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="size-5 text-base-content/40 z-40"  />
+                  <Lock className="size-5 text-base-content/40 z-40" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
@@ -137,10 +159,10 @@ export const SignUpPage = () => {
 
       {/* right side */}
 
-      {/* <AuthImagePattern
+      <AuthImagePattern
         title="Join our community"
         subtitle="Connect with friends, share moments, and stay in touch with your loved ones."
-      /> */}
+      />
     </div>
   );
 };
