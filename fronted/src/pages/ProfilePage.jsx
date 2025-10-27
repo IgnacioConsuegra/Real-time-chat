@@ -1,20 +1,26 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore.js";
-import {Mail, Camera, User } from "lucide-react";
+import { Mail, Camera, User } from "lucide-react";
+import toast from "react-hot-toast";
 
 export const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
   const [selectedImage, setSelectedImage] = useState(null);
   const handleImageUpload = async ev => {
     const file = ev.target.files[0];
-    if(!file) return;
+    if (!file) return;
+    const maxSize = 2 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error("The image is too large. It must be less than 2mb.");
+      return;
+    }
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = async () => {
       const base64Image = reader.result;
-      setSelectedImage(base64Image)
-      await updateProfile({profilePic: base64Image});
-    }
+      setSelectedImage(base64Image);
+      await updateProfile({ profilePic: base64Image });
+    };
   };
   return (
     <div className="h-screen pt-20">

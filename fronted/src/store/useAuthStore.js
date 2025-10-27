@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 export const useAuthStore = create(set => ({
   authUser: null,
@@ -54,5 +55,17 @@ export const useAuthStore = create(set => ({
       }
     }
   },
-  updateProfile: async () => {},
+  updateProfile: async data => {
+    set({ isUpdatingProfile: true });
+    try {
+      const res = await axiosInstance.put("/auth/update-profile", data);
+      set({ authUser: res.data });
+      toast.success("Profile updated successfully");
+    } catch (error) {
+      console.log("Error in update the profile :", error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isUpdatingProfile: false });
+    }
+  },
 }));
