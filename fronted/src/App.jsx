@@ -11,7 +11,7 @@ import { SignUpPage } from "./pages/SignUpPage";
 import { useAuthStore } from "./store/useAuthStore";
 import {Loader} from "lucide-react"
 import { Toaster } from "react-hot-toast";
-import { useThemeStore } from "../store/useThemeStore";
+import { useThemeStore } from "./store/useThemeStore";
 const App = () => {
   const {authUser, checkAuth, isCheckingAuth} =  useAuthStore();
   const {theme} = useThemeStore();
@@ -19,8 +19,8 @@ const App = () => {
     checkAuth()
   }, [checkAuth]);
   useEffect(() => {
-    // document.documentElement.dataset.theme = "cupcake";
-
+    document.documentElement.dataset.theme = theme;
+    console.log(theme)
   }, [theme]);
   if(isCheckingAuth && !authUser) return (
     <div className="flex items-center justify-center h-screen">
