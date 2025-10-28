@@ -11,17 +11,24 @@ import { SignUpPage } from "./pages/SignUpPage";
 import { useAuthStore } from "./store/useAuthStore";
 import {Loader} from "lucide-react"
 import { Toaster } from "react-hot-toast";
+import { useThemeStore } from "../store/useThemeStore";
 const App = () => {
   const {authUser, checkAuth, isCheckingAuth} =  useAuthStore();
+  const {theme} = useThemeStore();
   useEffect(() => {
     checkAuth()
   }, [checkAuth]);
-  console.log({authUser});
+  useEffect(() => {
+    // document.documentElement.dataset.theme = "cupcake";
+
+  }, [theme]);
   if(isCheckingAuth && !authUser) return (
     <div className="flex items-center justify-center h-screen">
       <Loader className="size-10 animate-spin"/>
     </div>
   )
+
+
   return (
     <div>
       <Navbar></Navbar>
