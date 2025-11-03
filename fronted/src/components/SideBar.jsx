@@ -2,11 +2,11 @@ import React, { useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
 import SidebarSkeleton from "./skeletons/SideBarSkeleton";
 import { Users } from "lucide-react";
+import { useAuthStore } from "../store/useAuthStore";
 
 const SideBar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUserLoading } = useChatStore();
-  const onlineUsers = [];
-
+  const {onlineUsers} = useAuthStore();
   useEffect(() => {
     getUsers();
   }, [getUsers]);
@@ -19,7 +19,7 @@ const SideBar = () => {
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
         {/* TODO: Online filter toggle */}
-        <div className="overflow-y-auto w-full py-3">
+              <div className="overflow-y-auto w-full py-3">
         {users.map((user) => (
           <button
             key={user._id}
@@ -54,9 +54,9 @@ const SideBar = () => {
           </button>
         ))}
 
-        {/* {users.length === 0 && (
+        {users.length === 0 && (
           <div className="text-center text-zinc-500 py-4">No online users</div>
-        )} */}
+        )}
       </div>
       </div>
     </aside>
