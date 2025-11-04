@@ -10,7 +10,7 @@ const ChatContainer = () => {
     getMessages(selectedUser._id);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedUser._id, getMessages]);
-  if(isMessagesLoading){
+  if(true){
     return(
       <div className='flex-1 flex flex-col overflow-auto'>
         <ChatHeader/>
