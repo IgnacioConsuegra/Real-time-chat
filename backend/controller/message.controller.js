@@ -32,8 +32,8 @@ export const getMessages = async (req, res) => {
 };
 export const sendMessage = async (req, res) => {
   try {
-    const { text, image } = req.params;
-    const { id } = req.params;
+    const { text, image } = req.body;
+    const { id: receiverId } = req.params;
     const senderId = req.user._id;
     let imageUrl;
     if (image) {
@@ -49,7 +49,7 @@ export const sendMessage = async (req, res) => {
     await newMessage.save();
     res.status(201).json(newMessage);
   } catch (error) {
-    console.log("Error in getUserForSideBar: ", err.message);
+    console.log("Error in send message: ", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 };
