@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { MessageSquare, Mail, Lock, EyeOff, Eye, Loader2 } from "lucide-react";
 import { AuthImagePattern } from "../components/AuthImagePattern";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 
 export const LoginPage = () => {
@@ -10,7 +10,7 @@ export const LoginPage = () => {
     email: "",
     password: "",
   });
-  const { login, isLoggingIn, authUser } = useAuthStore();
+  const { login, isLoggingIn } = useAuthStore();
   const handleSubmit = (ev) => {
     ev.preventDefault();
     login(formData)
