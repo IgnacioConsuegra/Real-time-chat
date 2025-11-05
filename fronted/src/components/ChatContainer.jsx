@@ -6,13 +6,15 @@ import { MessageSkeleton } from './skeletons/MessageSkeleton';
 import { useAuthStore } from '../store/useAuthStore';
 import { formatMessageTime } from '../lib/utils';
 const ChatContainer = () => {
-  const {messages, getMessages, isMessagesLoading, selectedUser} = useChatStore();
+  const {messages, getMessages, isMessagesLoading, selectedUser, subscribeToMessages, unSubscribeFromMessages} = useChatStore();
   const {authUser} = useAuthStore();
   useEffect(() => {
     getMessages(selectedUser._id);
+    subscribeToMessages();
+    return () => unSubscribeFromMessages();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedUser._id, getMessages]);
-  if(false){
+  }, [selectedUser._id, getMessages, subscribeToMessages, unSubscribeFromMessages]);
+  if(isMessagesLoading){
     return(
       <div className='flex-1 flex flex-col overflow-auto'>
         <ChatHeader/>
