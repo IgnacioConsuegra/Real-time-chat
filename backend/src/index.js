@@ -26,7 +26,7 @@ app.use(
     credentials: true,
   })
 );
-
+fronted;
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
 
