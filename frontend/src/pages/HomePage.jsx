@@ -1,8 +1,8 @@
 import React from 'react'
 import { useChatStore } from '../store/useChatStore.js'
-import {SideBar} from '../components/SideBar';
-import {NoChatSelected} from '../components/NoChatSelected';
-import {ChatContainer} from '../components/ChatContainer';
+import {SideBar} from '../components/SideBar.jsx';
+import {NoChatSelected} from '../components/NoChatSelected.jsx';
+import {ChatContainer} from '../components/ChatContainer.jsx';
 export const HomePage = () => {
   const {selectedUser} = useChatStore();
 

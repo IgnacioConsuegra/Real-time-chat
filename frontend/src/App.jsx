@@ -1,17 +1,17 @@
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable no-unused-vars */
 import React, { useEffect } from "react";
-import { Navbar } from "./components/Navbar";
+import { Navbar } from "./components/Navbar.jsx";
 import { Routes, Route, Navigate } from "react-router-dom";
-import { HomePage } from "./pages/HomePage";
-import { LoginPage } from "./pages/LoginPage";
-import { ProfilePage } from "./pages/ProfilePage";
-import { SettingsPage } from "./pages/SettingsPage";
-import { SignUpPage } from "./pages/SignUpPage";
-import { useAuthStore } from "./store/useAuthStore";
+import { HomePage } from "./pages/HomePage.jsx";
+import { LoginPage } from "./pages/LoginPage.jsx";
+import { ProfilePage } from "./pages/ProfilePage.jsx";
+import { SettingsPage } from "./pages/SettingsPage.jsx";
+import { SignUpPage } from "./pages/SignUpPage.jsx";
+import { useAuthStore } from "./store/useAuthStore.js";
 import {Loader} from "lucide-react"
 import { Toaster } from "react-hot-toast";
-import { useThemeStore } from "./store/useThemeStore";
+import { useThemeStore } from "./store/useThemeStore.js";
 const App = () => {
   const {authUser, checkAuth, isCheckingAuth, onlineUsers} =  useAuthStore();
   const {theme} = useThemeStore();
