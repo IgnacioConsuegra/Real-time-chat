@@ -4,7 +4,7 @@ import { useAuthStore } from "../store/useAuthStore.js";
 import {SidebarSkeleton} from "./skeletons/SideBarSkeleton.jsx";
 import { Users } from "lucide-react";
 
-export const Sidebar = () => {
+export const SideBar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
 
   const { onlineUsers } = useAuthStore();
