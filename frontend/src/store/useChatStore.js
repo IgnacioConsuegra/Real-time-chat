@@ -9,7 +9,8 @@ export const useChatStore = create((set, get) => ({
   selectedUser: null,
   isUsersLoading: false,
   isMessagesLoading: false,
-
+  showSideBar: true,
+  setShowSideBar: param => set({ showSideBar: param }),
   getUsers: async () => {
     set({ isUsersLoading: true });
     try {

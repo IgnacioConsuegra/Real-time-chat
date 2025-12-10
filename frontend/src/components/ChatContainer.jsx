@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useChatStore } from "../store/useChatStore.js";
 import { ChatHeader } from "./ChatHeader.jsx";
 import { MessageInput } from "./MessageInput.jsx";
@@ -47,7 +47,7 @@ export const ChatContainer = () => {
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map(message => (
           <div
-          ref={messageEndRef}
+            ref={messageEndRef}
             key={message._id}
             className={`chat ${
               message.senderId === authUser._id ? "chat-end" : "chat-start"
@@ -87,4 +87,3 @@ export const ChatContainer = () => {
     </div>
   );
 };
-

@@ -4,7 +4,7 @@ import { useAuthStore } from "../store/useAuthStore.js";
 import { useChatStore } from "../store/useChatStore.js";
 
 export const ChatHeader = () => {
-  const { selectedUser, setSelectedUser } = useChatStore();
+  const { selectedUser, setSelectedUser, setShowSideBar } = useChatStore();
   const { onlineUsers } = useAuthStore();
 
   return (
@@ -14,7 +14,10 @@ export const ChatHeader = () => {
           {/* Avatar */}
           <div className="avatar">
             <div className="size-10 rounded-full relative">
-              <img src={selectedUser.profilePic || "/avatar.png"} alt={selectedUser.fullName} />
+              <img
+                src={selectedUser.profilePic || "/avatar.png"}
+                alt={selectedUser.fullName}
+              />
             </div>
           </div>
 
@@ -29,7 +32,12 @@ export const ChatHeader = () => {
 
         {/* Close button */}
         <button onClick={() => setSelectedUser(null)}>
-          <X />
+          <X
+            className="cursor-pointer"
+            onClick={() => {
+              setShowSideBar(true);
+            }}
+          />
         </button>
       </div>
     </div>
