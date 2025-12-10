@@ -10,32 +10,42 @@ export const MessageInput = () => {
   const { sendMessage } = useChatStore();
   const handleImageChange = e => {
     const file = e.target.files[0];
-    if(!file.type.startsWith("image/")){
+    if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
+      return;
+    }
+    const maxSize = 1 * 1024 * 1024;
+    if (file.size > maxSize) {
+      toast.error("The image is too large (max 1MB)");
       return;
     }
     const reader = new FileReader();
     reader.onloadend = () => {
       setImagePreview(reader.result);
     };
+
     reader.readAsDataURL(file);
   };
   const removeImage = () => {
     setImagePreview(null);
-    if(fileInputRef.current) fileInputRef.current.value = "";
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
   const handleSendMessage = async e => {
     e.preventDefault();
-    if(!text.trim() && !imagePreview) return;
-    try{
+    if (!text.trim() && !imagePreview) return;
+    if (text.length >= 10000) {
+      toast.error("Please write at most 10000 characters");
+      return;
+    }
+    try {
       await sendMessage({
         text: text.trim(),
         image: imagePreview,
       });
       setText("");
       setImagePreview(null);
-      if(fileInputRef.current) fileInputRef.current.value = '';
-    }catch(err){
+      if (fileInputRef.current) fileInputRef.current.value = "";
+    } catch (err) {
       console.log("Failed to send message: ", err);
     }
   };
@@ -80,7 +90,9 @@ export const MessageInput = () => {
 
           <button
             type="button"
-            className={`hidden sm:flex btn btn-circle ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
+            className={` relative -ml-10 cursor-pointer ${
+              imagePreview ? "text-emerald-500" : "text-zinc-400"
+            }`}
             onClick={() => fileInputRef.current?.click()}
           >
             <Image size={20} />
