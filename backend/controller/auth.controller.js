@@ -124,7 +124,7 @@ export const forgotPassword = async (req, res) => {
 
     const CLIENT_URL =
       process.env.NODE_ENV === "production"
-        ? "https://real-time-chat-1-icd4.onrender.com/"
+        ? "https://real-time-chat-1-icd4.onrender.com"
         : `http://localhost:${PORT}`;
 
     const resetLink = `${CLIENT_URL}/reset-password/${token}`;
