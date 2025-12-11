@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
-
+import { useParams } from "react-router-dom";
 const BASE_URL =
   import.meta.env.MODE === "development" ? "http://localhost:5001" : "/";
 export const useAuthStore = create((set, get) => ({
@@ -13,13 +13,14 @@ export const useAuthStore = create((set, get) => ({
   isCheckingAuth: true,
   onlineUsers: [],
   socket: null,
+  passwordEmailSent: false,
+  passwordChanged: false,
   checkAuth: async () => {
     try {
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
       get().connectSocket();
     } catch (error) {
-      console.log("Error in checkAuth: ", error);
       set({ authUser: null });
     } finally {
       set({ isCheckingAuth: false });
@@ -60,6 +61,27 @@ export const useAuthStore = create((set, get) => ({
       } catch (error) {
         toast.error(error.response.data.message);
       }
+    }
+  },
+  forgotPassword: async data => {
+    try {
+      const res = await axiosInstance.post("/auth/forgot-password", data);
+      toast.success("Reset email sent successfully");
+      set({ passwordEmailSent: true });
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  },
+  resetPassword: async data => {
+    try {
+      const { password, token } = data;
+      await axiosInstance.post(`/auth/reset-password/${token}`, {
+        newPassword: password,
+      });
+      toast.success("Password changed successfully");
+      set({ passwordChanged: true });
+    } catch (error) {
+      toast.error(error.response.data.message);
     }
   },
   updateProfile: async data => {

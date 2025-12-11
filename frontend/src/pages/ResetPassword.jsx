@@ -1,20 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { MessageSquare, Mail, Lock, EyeOff, Eye, Loader2 } from "lucide-react";
+import React, { useState } from "react";
+import { MessageSquare, Lock, EyeOff, Eye } from "lucide-react";
 import { AuthImagePattern } from "../components/AuthImagePattern.jsx";
-import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore.js";
+import { Navigate, useParams } from "react-router-dom";
+import toast from "react-hot-toast";
 
-export const LoginPage = () => {
-  const [showPassword, setShowPassword] = useState();
+export const ResetPassword = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
-    email: "",
     password: "",
+    confirmPassword: "",
   });
-  const { login, isLoggingIn } = useAuthStore();
+  const { resetPassword, passwordChanged } = useAuthStore();
+  const { token } = useParams();
+
   const handleSubmit = ev => {
     ev.preventDefault();
-    login(formData);
+    if (formData.password != formData.confirmPassword) {
+      toast.error("Passwords are not the same.");
+      return;
+    }
+    console.log(token);
+    resetPassword({
+      password: formData.password,
+      token,
+    });
   };
+  if (passwordChanged) {
+    return <Navigate to="/" />;
+  }
   return (
     <div className="h-screen grid lg:grid-cols-2">
       {/* Left Side - Form */}
@@ -29,36 +43,16 @@ export const LoginPage = () => {
               >
                 <MessageSquare className="w-6 h-6 text-primary" />
               </div>
-              <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
-              <p className="text-base-content/60">Sign in to your account</p>
+              <h1 className="text-2xl font-bold mt-2">Reset your password</h1>
             </div>
           </div>
-
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Email</span>
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-base-content/40" />
-                </div>
-                <input
-                  type="email"
-                  className={`input input-bordered w-full pl-10`}
-                  placeholder="you@example.com"
-                  value={formData.email}
-                  onChange={e =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="form-control">
-              <label className="label">
-                <span className="label-text font-medium">Password</span>
+                <span className="label-text font-medium">
+                  Your new password :{" "}
+                </span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -79,44 +73,53 @@ export const LoginPage = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-base-content/40" />
+                    <EyeOff className="h-5 w-5 text-base-content/40 cursor-pointer" />
                   ) : (
-                    <Eye className="h-5 w-5 text-base-content/40" />
+                    <Eye className="h-5 w-5 text-base-content/40 cursor-pointer" />
+                  )}
+                </button>
+              </div>
+            </div>
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium">
+                  Confirm your password :{" "}
+                </span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-base-content/40" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className={`input input-bordered w-full pl-10`}
+                  placeholder="••••••••"
+                  value={formData.confirmPassword}
+                  onChange={e =>
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-base-content/40 cursor-pointer" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-base-content/40 cursor-pointer" />
                   )}
                 </button>
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary w-full"
-              disabled={isLoggingIn}
-            >
-              {isLoggingIn ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Loading...
-                </>
-              ) : (
-                "Sign in"
-              )}
+            <button type="submit" className="btn btn-primary w-full">
+              Change my password
             </button>
           </form>
-
-          <div className="text-center">
-            <p className="text-base-content/60">
-              Don&apos;t have an account?{" "}
-              <Link to="/signup" className="link link-primary">
-                Create account
-              </Link>
-            </p>
-            <p className="text-base-content/60">
-              Forgot username or password?{" "}
-              <Link to="/forgot" className="link link-primary">
-                Change username/password
-              </Link>
-            </p>
-          </div>
         </div>
       </div>
 

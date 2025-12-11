@@ -35,7 +35,7 @@ export const SignUpPage = () => {
   const handleSubmit = ev => {
     ev.preventDefault();
     const success = validateForm();
-    if(success === true) signUp(formData);
+    if (success === true) signUp(formData);
   };
   return (
     <div className="min-h-screen grid lg:grid-cols-2">

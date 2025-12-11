@@ -2,6 +2,8 @@ import { generateToken } from "../lib/utils.js";
 import User from "../models/user.model.js";
 import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
+import { resend } from "../lib/resend.js";
+import crypto from "crypto";
 export const signup = async (req, res) => {
   const { fullName, email, password } = req.body;
   try {
@@ -99,5 +101,93 @@ export const checkAuth = (req, res) => {
   } catch (error) {
     console.log("Error in checkAuth controller", error.message);
     res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: "No user found with that email" });
+    }
+
+    const token = crypto.randomBytes(32).toString("hex");
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 1000 * 60 * 60;
+    await user.save();
+
+    // const PORT = process.env.PORT || 3000; // This is for production.
+    const PORT = 5173; // This is for development
+
+    const CLIENT_URL =
+      process.env.NODE_ENV === "production"
+        ? "https://ignacioconsuegra.com"
+        : `http://localhost:${PORT}`;
+
+    const resetLink = `${CLIENT_URL}/reset-password/${token}`;
+
+    await resend.emails.send({
+      from: "Chatty <onboarding@resend.dev>",
+      to: user.email,
+      subject: "Reset Your Password",
+      html: `
+        <p>Hello <strong>${user.fullName}</strong>,</p>
+        <p>You requested a password reset.</p>
+        <p>Username : <strong>${user.fullName}</strong>,</p>
+        <p>Click the link below to reset your password:</p>
+        <a href="${resetLink}">${resetLink}</a>
+
+        <p>This link expires in 1 hour.</p>
+        <br />
+        <p>If you didn't request this, simply ignore this email.</p>
+      `,
+    });
+
+    res.json({ message: "Password reset email sent" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { newPassword } = req.body;
+
+    if (!newPassword) {
+      return res.status(400).json({ message: "New password is required" });
+    }
+
+    if (newPassword.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters" });
+    }
+
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }, // still valid
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: "Invalid or expired token" });
+    }
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    user.password = hashedPassword;
+
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+
+    await user.save();
+
+    res.json({ message: "Password has been successfully reset" });
+  } catch (err) {
+    console.error("Error resetting password:", err);
+    res.status(500).json({ message: "Server error" });
   }
 };
