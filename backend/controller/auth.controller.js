@@ -118,12 +118,13 @@ export const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 1000 * 60 * 60;
     await user.save();
 
-    // const PORT = process.env.PORT || 3000; // This is for production.
-    const PORT = 5173; // This is for development
+    const PORT = process.env.PORT || 3000; // This is for production.
+    // const PORT = 5173;
+    // This is for development
 
     const CLIENT_URL =
       process.env.NODE_ENV === "production"
-        ? "https://ignacioconsuegra.com"
+        ? "https://real-time-chat-1-icd4.onrender.com/"
         : `http://localhost:${PORT}`;
 
     const resetLink = `${CLIENT_URL}/reset-password/${token}`;
