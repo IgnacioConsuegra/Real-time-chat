@@ -67,7 +67,7 @@ export const ForgotPassword = () => {
             </div>
 
             <button type="submit" className="btn btn-primary w-full">
-              Sent
+              Send
             </button>
           </form>
 
